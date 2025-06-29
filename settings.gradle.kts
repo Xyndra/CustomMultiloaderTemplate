@@ -14,12 +14,11 @@ pluginManagement {
 	val loomVersion: String by settings
 	plugins {
 		id("fabric-loom") version loomVersion apply false
+		id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
 	}
 }
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
-}
+
 
 val modName: String by settings
 rootProject.name = modName

@@ -8,13 +8,17 @@ val minecraftVersion: String by project
 val loaderVersion: String by project
 val fabricVersion: String by project
 val fabricKotlinVersion: String by project
-
+val parchmentVersion: String by project
+val modName: String by project
+val modDescription: String by project
+val modAuthors: String by project
+val modLicense: String by project
 val modVersion: String by project
 val mavenGroup: String by project
 val modId: String by project
 
 base {
-	archivesName = modId
+	archivesName = "$modId-$minecraftVersion-fabric-$modVersion"
 }
 
 repositories {
@@ -34,17 +38,37 @@ fabricApi {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft("com.mojang:minecraft:${minecraftVersion}")
-	mappings(loom.officialMojangMappings())
+	mappings(loom.layered {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${parchmentVersion}")
+	})
 	modImplementation("net.fabricmc:fabric-loader:${loaderVersion}")
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
 	modImplementation("net.fabricmc:fabric-language-kotlin:${fabricKotlinVersion}")
+
+	implementation(project(":common"))
 }
 
+val replacements = mapOf(
+	"minecraft_version" to minecraftVersion,
+	"loader_version" to loaderVersion,
+	"fabric_version" to fabricVersion,
+	"fabric_kotlin_version" to fabricKotlinVersion,
+	"parchment_version" to parchmentVersion,
+	"mod_version" to modVersion,
+	"group_id" to mavenGroup,
+	"mod_name" to modName,
+	"mod_description" to modDescription,
+	"mod_authors" to modAuthors.replace(", ", "\", \""),
+	"mod_license" to modLicense,
+	"mod_id" to modId
+)
+
 tasks.named<ProcessResources>("processResources") {
-	filesMatching("fabric.mod.json") {
-		expand("version" to modVersion)
+	filesNotMatching(mutableSetOf("**/*.png")) {
+		expand(replacements)
 	}
 }
 

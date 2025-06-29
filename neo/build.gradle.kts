@@ -2,12 +2,14 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("net.neoforged.gradle.userdev") version "7.0.189"
+    kotlin("jvm")
 }
 
 val mavenGroup: String by project
 val modId: String by project
 val minecraftVersion: String by project
 val minecraftVersionRange: String by project
+val parchmentVersion: String by project
 val neoVersion: String by project
 val neoVersionRange: String by project
 val modName: String by project
@@ -15,30 +17,53 @@ val modLicense: String by project
 val modVersion: String by project
 val modAuthors: String by project
 val modDescription: String by project
+val kotlinForForgeVersion: String by project
 
 repositories {
+    maven {
+        name = "Kotlin for Forge"
+        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
+        content { includeGroup("thedarkcolour")}
+    }
     // Add here additional repositories if required by some of the dependencies below.
 }
 
 base {
-    archivesName = modId
+    archivesName = "$modId-$minecraftVersion-neoforge-$modVersion"
 }
 
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+    }
+}
+
 
 //minecraft.accessTransformers.file rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
 //minecraft.accessTransformers.entry public net.minecraft.client.Minecraft textureManager # textureManager
+
+// minecraftVersion is also a variable name used by the parchment plugin.
+val outerMinecraftVersion = minecraftVersion
+subsystems {
+    parchment {
+        addRepository(false)
+        parchmentArtifact("org.parchmentmc.data:parchment-${outerMinecraftVersion}:${parchmentVersion}")
+    }
+}
 
 // Default run configurations.
 // These can be tweaked, removed, or duplicated as needed.
 runs {
     // applies to all the run configs below
     configureEach {
-        // Recommended logging data for a userdev environment
+        // Recommended logging data for an userdev environment
         // The markers can be added/remove as needed separated by commas.
         // "SCAN": For mods scan.
         // "REGISTRIES": For firing of registry events.
@@ -123,8 +148,8 @@ dependencies {
     // Example mod dependency using a file as dependency
     // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
 
-    // Example project dependency using a sister or child project:
-    // implementation project(":myproject")
+    implementation(project(":common"))
+    implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinForForgeVersion")
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -149,9 +174,7 @@ tasks.withType<ProcessResources>().configureEach {
         "mod_description" to modDescription,
     )
     inputs.properties(replaceProperties)
-    filesMatching("META-INF/neoforge.mods.toml") {
-        expand(replaceProperties)
-    }
+    expand(replaceProperties)
 }
 
 // Example configuration to allow publishing using the maven-publish plugin
