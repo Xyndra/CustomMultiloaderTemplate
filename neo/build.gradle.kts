@@ -28,6 +28,23 @@ repositories {
     // Add here additional repositories if required by some of the dependencies below.
 }
 
+project.gradle.taskGraph.whenReady {
+    allTasks.forEach {
+        if (it is net.neoforged.gradle.userdev.runtime.tasks.ClasspathSerializer) {
+            it.doLast {
+                val file = it.targetFile.get().asFile
+                file.readLines().filter { line ->
+                    !line.contains("org.jetbrains.kotlin")
+                }.also { lines ->
+                    file.writeText(lines.joinToString("\n"))
+                }
+            }
+        }
+    }
+
+}
+
+
 base {
     archivesName = "$modId-$minecraftVersion-neoforge-$modVersion"
 }
@@ -148,7 +165,6 @@ dependencies {
     // Example mod dependency using a file as dependency
     // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
 
-    implementation(project(":common"))
     implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinForForgeVersion")
 
     // For more info:
