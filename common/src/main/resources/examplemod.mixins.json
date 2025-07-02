@@ -10,5 +10,6 @@
 	},
 	"overwrites": {
 		"requireAnnotations": true
-	}
+	},
+	"refmap": "${mod_id}.refmap.json"
 }

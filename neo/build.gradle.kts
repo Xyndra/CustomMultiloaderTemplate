@@ -174,12 +174,6 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }
 
-jarJar {
-    dependencies {
-        implementation(project(":common"))
-    }
-}
-
 tasks.withType<KotlinCompile>().configureEach {
     source(project(":common").sourceSets.main.get().allSource)
 }

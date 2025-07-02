@@ -4,7 +4,6 @@ plugins {
 	id("fabric-loom")
 	id("maven-publish")
 	kotlin("jvm")
-	id("com.gradleup.shadow") version "8.3.8"
 }
 
 val minecraftVersion: String by project
@@ -54,17 +53,8 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
 	modImplementation("net.fabricmc:fabric-language-kotlin:${fabricKotlinVersion}")
-
-	shaded(project(":common"))
 }
 
-tasks.shadowJar {
-	configurations = listOf(shaded)
-}
-
-tasks.build {
-	dependsOn(tasks.shadowJar)
-}
 
 val replacements = mapOf(
 	"minecraft_version" to minecraftVersion,
@@ -90,6 +80,7 @@ tasks.named<ProcessResources>("processResources") {
 
 tasks.withType<JavaCompile>().configureEach {
 	options.release.set(21)
+	source(project(":common").sourceSets.main.get().allSource)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -131,5 +122,11 @@ publishing {
 		// Notice: This block does NOT have the same function as the block in the top level.
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
+	}
+}
+
+loom {
+	mixin {
+		defaultRefmapName.set("${modId}.refmap.json")
 	}
 }
