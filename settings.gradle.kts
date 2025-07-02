@@ -22,4 +22,9 @@ pluginManagement {
 
 val modName: String by settings
 rootProject.name = modName
+// Set the names of the subprojects to be like "Example Mod - Fabric"
+val modId: String by settings
+rootProject.children.forEach { subproject ->
+	subproject.name = "$modName - ${subproject.name.replaceFirstChar { it.uppercase() }}"
+}
 include(":fabric", ":neo", ":common")

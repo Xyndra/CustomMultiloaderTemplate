@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.example;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModContainer;

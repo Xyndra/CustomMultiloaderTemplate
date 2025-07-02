@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.example;
 
 import org.slf4j.Logger;
 

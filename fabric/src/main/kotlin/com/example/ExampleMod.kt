@@ -4,7 +4,7 @@ import net.fabricmc.api.ModInitializer
 import org.slf4j.LoggerFactory
 
 object ExampleMod : ModInitializer {
-    private val logger = LoggerFactory.getLogger("examplemod")
+    private val logger = LoggerFactory.getLogger("assets/examplemod")
 
 	override fun onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.

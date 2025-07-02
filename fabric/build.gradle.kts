@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
 	id("fabric-loom")
 	id("maven-publish")
@@ -67,6 +69,7 @@ val replacements = mapOf(
 )
 
 tasks.named<ProcessResources>("processResources") {
+	from(project(":common").sourceSets.main.get().resources)
 	filesNotMatching(mutableSetOf("**/*.png")) {
 		expand(replacements)
 	}
@@ -76,10 +79,11 @@ tasks.withType<JavaCompile>().configureEach {
 	options.release.set(21)
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+tasks.withType<KotlinCompile>().configureEach {
 	compilerOptions {
 		jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
 	}
+	source(project(":common").sourceSets.main.get().allSource)
 }
 
 

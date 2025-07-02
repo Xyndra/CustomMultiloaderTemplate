@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("java-library")
     id("maven-publish")
@@ -56,7 +58,7 @@ java {
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
@@ -71,7 +73,7 @@ val outerMinecraftVersion = minecraftVersion
 subsystems {
     parchment {
         addRepository(false)
-        parchmentArtifact("org.parchmentmc.data:parchment-${outerMinecraftVersion}:${parchmentVersion}")
+        parchmentArtifact("org.parchmentmc.data:parchment-$outerMinecraftVersion:$parchmentVersion")
     }
 }
 
@@ -165,6 +167,7 @@ dependencies {
     // Example mod dependency using a file as dependency
     // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
 
+    implementation(project(":common"))
     implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinForForgeVersion")
 
     // For more info:
@@ -172,11 +175,20 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }
 
+tasks.withType<KotlinCompile>().configureEach {
+    source(project(":common").sourceSets.main.get().allSource)
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    source(project(":common").sourceSets.main.get().allSource)
+}
+
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 // When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
 // See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
 tasks.withType<ProcessResources>().configureEach {
+    from(project(":common").sourceSets.main.get().resources)
     val replaceProperties = mapOf(
         "minecraft_version" to minecraftVersion,
         "minecraft_version_range" to minecraftVersionRange,
@@ -190,7 +202,9 @@ tasks.withType<ProcessResources>().configureEach {
         "mod_description" to modDescription,
     )
     inputs.properties(replaceProperties)
-    expand(replaceProperties)
+    filesNotMatching("**/*.png") {
+        expand(replaceProperties)
+    }
 }
 
 // Example configuration to allow publishing using the maven-publish plugin
