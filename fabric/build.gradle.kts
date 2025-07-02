@@ -4,6 +4,7 @@ plugins {
 	id("fabric-loom")
 	id("maven-publish")
 	kotlin("jvm")
+	id("com.gradleup.shadow") version "8.3.8"
 }
 
 val minecraftVersion: String by project
@@ -37,6 +38,10 @@ fabricApi {
 	}
 }
 
+val shaded by configurations.creating {
+	isTransitive = false
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft("com.mojang:minecraft:${minecraftVersion}")
@@ -50,7 +55,15 @@ dependencies {
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
 	modImplementation("net.fabricmc:fabric-language-kotlin:${fabricKotlinVersion}")
 
-	implementation(project(":common"))
+	shaded(project(":common"))
+}
+
+tasks.shadowJar {
+	configurations = listOf(shaded)
+}
+
+tasks.build {
+	dependsOn(tasks.shadowJar)
 }
 
 val replacements = mapOf(

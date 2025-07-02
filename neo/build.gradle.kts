@@ -167,12 +167,17 @@ dependencies {
     // Example mod dependency using a file as dependency
     // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
 
-    implementation(project(":common"))
     implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinForForgeVersion")
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+}
+
+jarJar {
+    dependencies {
+        implementation(project(":common"))
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
