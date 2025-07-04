@@ -9,6 +9,10 @@ subprojects {
             name = "ParchmentMC"
             url = uri("https://maven.parchmentmc.org")
         }
+        maven {
+            name = "Wisp Forest"
+            url = uri("https://maven.wispforest.io/releases")
+        }
         mavenLocal()
         mavenCentral()
         google()

@@ -1,3 +1,4 @@
+import net.neoforged.gradle.userdev.runtime.tasks.ClasspathSerializer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -32,7 +33,7 @@ repositories {
 
 project.gradle.taskGraph.whenReady {
     allTasks.forEach {
-        if (it is net.neoforged.gradle.userdev.runtime.tasks.ClasspathSerializer) {
+        if (it is ClasspathSerializer) {
             it.doLast {
                 val file = it.targetFile.get().asFile
                 file.readLines().filter { line ->
@@ -68,12 +69,10 @@ tasks.withType<KotlinCompile>().configureEach {
 //minecraft.accessTransformers.file rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
 //minecraft.accessTransformers.entry public net.minecraft.client.Minecraft textureManager # textureManager
 
-// minecraftVersion is also a variable name used by the parchment plugin.
-val outerMinecraftVersion = minecraftVersion
 subsystems {
     parchment {
         addRepository(false)
-        parchmentArtifact("org.parchmentmc.data:parchment-$outerMinecraftVersion:$parchmentVersion")
+        parchmentArtifact("org.parchmentmc.data:parchment-$parchmentVersion")
     }
 }
 
@@ -167,6 +166,7 @@ dependencies {
     // Example mod dependency using a file as dependency
     // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
 
+    compileOnly(project(":common"))
     implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinForForgeVersion")
 
     // For more info:
@@ -186,7 +186,8 @@ tasks.withType<JavaCompile>().configureEach {
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 // When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
 // See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
-tasks.withType<ProcessResources>().configureEach {
+tasks.processResources {
+    dependsOn(project(":common").tasks.processResources)
     from(project(":common").sourceSets.main.get().resources)
     val replaceProperties = mapOf(
         "minecraft_version" to minecraftVersion,
@@ -201,7 +202,7 @@ tasks.withType<ProcessResources>().configureEach {
         "mod_description" to modDescription,
     )
     inputs.properties(replaceProperties)
-    filesNotMatching("**/*.png") {
+    filesNotMatching(listOf("**/*.png", "**/*.props")) {
         expand(replaceProperties)
     }
 }

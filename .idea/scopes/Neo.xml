@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Neo" pattern="file[Example_Mod.neo.main]:*/||file[Example_Mod.neo]:runs//*" />
+</component>

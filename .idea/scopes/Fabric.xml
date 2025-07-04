@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Fabric" pattern="file[Example_Mod.fabric]:run//*||file[Example_Mod.fabric.main]:*/" />
+</component>

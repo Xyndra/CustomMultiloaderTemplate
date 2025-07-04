@@ -11,6 +11,7 @@ val loaderVersion: String by project
 val fabricVersion: String by project
 val fabricKotlinVersion: String by project
 val parchmentVersion: String by project
+val owoVersion: String by project
 val modName: String by project
 val modDescription: String by project
 val modAuthors: String by project
@@ -37,22 +38,23 @@ fabricApi {
 	}
 }
 
-val shaded by configurations.creating {
-	isTransitive = false
-}
-
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft("com.mojang:minecraft:${minecraftVersion}")
 	mappings(loom.layered {
 		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${parchmentVersion}")
+		parchment("org.parchmentmc.data:parchment-${parchmentVersion}")
 	})
 	modImplementation("net.fabricmc:fabric-loader:${loaderVersion}")
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
 	modImplementation("net.fabricmc:fabric-language-kotlin:${fabricKotlinVersion}")
+
+	modImplementation("io.wispforest:owo-lib:${owoVersion}")
+    include("io.wispforest:owo-sentinel:${owoVersion}")
+
+	compileOnly(project(":common"))
 }
 
 
@@ -71,9 +73,10 @@ val replacements = mapOf(
 	"mod_id" to modId
 )
 
-tasks.named<ProcessResources>("processResources") {
+tasks.processResources {
+	dependsOn(project(":common").tasks.processResources)
 	from(project(":common").sourceSets.main.get().resources)
-	filesNotMatching(mutableSetOf("**/*.png")) {
+	filesNotMatching(mutableSetOf("**/*.png", "**/*.props")) {
 		expand(replacements)
 	}
 }
