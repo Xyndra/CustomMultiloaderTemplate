@@ -2,7 +2,7 @@ package com.example
 
 import java.util.Properties as JavaProperties
 
-object Properties {
+object ProjectProps {
     private val props: Map<String, String>
     // This must be available at compile time because it is used in annotations,
     // which is why it can only be checked and not automatic.

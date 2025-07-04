@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Main Code" pattern="file[Example_Mod.common.main]:*/||file[Example_Mod.fabric.main]:*/||file[Example_Mod.neo.main]:*/" />
+</component>

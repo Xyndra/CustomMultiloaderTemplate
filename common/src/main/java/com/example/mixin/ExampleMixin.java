@@ -1,6 +1,6 @@
 package com.example.mixin;
 
-import com.example.Properties;
+import com.example.ProjectProps;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +13,6 @@ public class ExampleMixin {
     private void init(CallbackInfo info) {
         // This code is injected into the start of MinecraftServer.loadLevel()V
         System.out.println("Hello from ExampleMixin! The server is starting up.");
-        System.out.println("ModID: " + Properties.getSafe("modId") + ", ModName: " + Properties.getSafe("modName"));
+        System.out.println("ModID: " + ProjectProps.getSafe("modId") + ", ModName: " + ProjectProps.getSafe("modName"));
     }
 }

@@ -53,4 +53,6 @@ dependencies {
     compileOnly("io.github.llamalad7:mixinextras-common:0.3.5")
     compileOnly("net.minecraft:client:$minecraftVersion")
     annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5")
+    compileOnly(kotlin("reflect"))
+    compileOnly("org.ow2.asm:asm:9.6")
 }
