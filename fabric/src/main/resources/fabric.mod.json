@@ -17,13 +17,13 @@
 	"entrypoints": {
 		"main": [
 			{
-				"value": "com.example.ExampleMod",
+				"value": "de.xyndra.examplemod.ExampleMod",
 				"adapter": "kotlin"
 			}
 		],
 		"fabric-datagen": [
 			{
-				"value": "com.example.ExampleModDataGenerator",
+				"value": "de.xyndra.examplemod.ExampleModDataGenerator",
 				"adapter": "kotlin"
 			}
 		]
