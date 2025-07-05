@@ -1,5 +1,6 @@
 package com.example
 
+import com.example.utils.ProjectProps
 import net.minecraft.client.gui.screens.Screen
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.fml.ModContainer

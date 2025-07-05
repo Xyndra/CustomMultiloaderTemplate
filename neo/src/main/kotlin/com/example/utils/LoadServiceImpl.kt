@@ -1,6 +1,5 @@
 package com.example.utils
 
-import com.example.ProjectProps
 import net.neoforged.fml.ModList
 import java.lang.annotation.ElementType
 

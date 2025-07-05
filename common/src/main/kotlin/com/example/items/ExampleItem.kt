@@ -1,6 +1,8 @@
 package com.example.items
 
 import com.example.Globals
+import com.example.ItemInfo
+import com.example.tabs.ExampleTab
 import com.example.utils.LoadKt
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.Item
@@ -16,9 +18,12 @@ class ExampleItem(props: Properties) : Item(
     }
 
     companion object {
+        const val NAME = "example_item"
+
         fun load() {
             println("Loading ExampleItem...")
-            Globals.items["example_item"] = { props: Properties -> ExampleItem(props) }
+            Globals.items[NAME] = { props: Properties -> ExampleItem(props) }
+            Globals.itemInfos[NAME] = ItemInfo(tabName = ExampleTab.NAME)
         }
     }
 }

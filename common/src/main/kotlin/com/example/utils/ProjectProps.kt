@@ -1,4 +1,4 @@
-package com.example
+package com.example.utils
 
 import java.util.Properties as JavaProperties
 
