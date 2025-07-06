@@ -17,7 +17,6 @@ val modDescription: String by project
 val modAuthors: String by project
 val modLicense: String by project
 val modVersion: String by project
-val mavenGroup: String by project
 val modId: String by project
 
 base {
@@ -65,7 +64,6 @@ val replacements = mapOf(
 	"fabric_kotlin_version" to fabricKotlinVersion,
 	"parchment_version" to parchmentVersion,
 	"mod_version" to modVersion,
-	"group_id" to mavenGroup,
 	"mod_name" to modName,
 	"mod_description" to modDescription,
 	"mod_authors" to modAuthors.replace(", ", "\", \""),

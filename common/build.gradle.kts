@@ -5,7 +5,6 @@ plugins {
     id("net.neoforged.gradle.vanilla") version "7.0.189"
 }
 
-val mavenGroup: String by project
 val modId: String by project
 val modVersion: String by project
 val minecraftVersion: String by project

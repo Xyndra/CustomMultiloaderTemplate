@@ -8,7 +8,6 @@ plugins {
     kotlin("jvm")
 }
 
-val mavenGroup: String by project
 val modId: String by project
 val minecraftVersion: String by project
 val minecraftVersionRange: String by project
