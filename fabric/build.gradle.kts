@@ -38,6 +38,7 @@ fabricApi {
 }
 
 dependencies {
+	implementation(project(":common"))
 	// To change the versions see the gradle.properties file
 	minecraft("com.mojang:minecraft:${minecraftVersion}")
 	mappings(loom.layered {

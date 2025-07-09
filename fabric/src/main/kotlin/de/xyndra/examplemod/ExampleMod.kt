@@ -111,5 +111,7 @@ object ExampleMod : ModInitializer {
                 logger.warn("Item $name has no tab set in ItemInfo")
             }
         }
+
+        ExampleModConfigWrapper.createAndLoad()
     }
 }

@@ -28,7 +28,6 @@ import net.neoforged.neoforge.registries.DeferredBlock
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
-import java.util.function.Consumer
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(ProjectProps.MOD_ID)
@@ -61,9 +60,7 @@ class ExampleMod(modEventBus: IEventBus, modContainer: ModContainer) {
             info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT))
         }
 
-        info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.asInt)
-
-        Config.ITEM_STRINGS.get().forEach(Consumer { item: String? -> info("ITEM >> {}", item) })
+        info("{}", Config.MAGIC_NUMBER.asInt)
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class
@@ -100,16 +97,8 @@ class ExampleMod(modEventBus: IEventBus, modContainer: ModContainer) {
     }
 
     companion object {
-        // Create a Deferred Register to hold Blocks which will all be registered under the
-        // "examplemod" namespace
         val BLOCKS: DeferredRegister.Blocks = DeferredRegister.createBlocks(ProjectProps.MOD_ID)
-
-        // Create a Deferred Register to hold Items which will all be registered under the
-        // "examplemod" namespace
         val ITEMS: DeferredRegister.Items = DeferredRegister.createItems(ProjectProps.MOD_ID)
-
-        // Create a Deferred Register to hold CreativeModeTabs which will all be registered under
-        // the "examplemod" namespace
         val CREATIVE_MODE_TABS: DeferredRegister<CreativeModeTab> =
                 DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ProjectProps.MOD_ID)
 
@@ -117,7 +106,6 @@ class ExampleMod(modEventBus: IEventBus, modContainer: ModContainer) {
         private val registeredBlocks = mutableMapOf<String, DeferredBlock<Block>>()
         private val registeredTabs =
                 mutableMapOf<String, DeferredHolder<CreativeModeTab, CreativeModeTab>>()
-
 
         init {
             Globals.loadAssets()

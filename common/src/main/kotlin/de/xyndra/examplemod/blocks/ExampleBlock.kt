@@ -2,6 +2,7 @@ package de.xyndra.examplemod.blocks
 
 import de.xyndra.examplemod.Globals
 import de.xyndra.examplemod.ItemInfo
+import de.xyndra.examplemod.options.TestOptions
 import de.xyndra.examplemod.tabs.ExternalTabs
 import de.xyndra.examplemod.utils.LoadKt
 import net.minecraft.core.BlockPos
@@ -23,6 +24,9 @@ class ExampleBlock(properties: Properties) : Block(properties) {
     ): InteractionResult {
         if (!level.isClientSide) {
             println("ExampleBlock used at position: $blockPos by player: ${player.name.string}")
+            println("Int Option values: " +
+                    "${TestOptions.testInt1.value}, " +
+                    "${TestOptions.testInt2.value}")
         }
         return InteractionResult.SUCCESS
     }

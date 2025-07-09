@@ -2,6 +2,7 @@ package de.xyndra.examplemod.items
 
 import de.xyndra.examplemod.Globals
 import de.xyndra.examplemod.ItemInfo
+import de.xyndra.examplemod.options.TestOptions
 import de.xyndra.examplemod.tabs.ExampleTab
 import de.xyndra.examplemod.utils.LoadKt
 import net.minecraft.world.InteractionResult
@@ -13,7 +14,9 @@ class ExampleItem(props: Properties) : Item(
     props
 ) {
     override fun useOn(ctx: UseOnContext): InteractionResult {
-        println("ExampleItem used at position: ${ctx.clickedPos}")
+        if (TestOptions.shouldPrint.value) {
+            println("ExampleItem used at position: ${ctx.clickedPos}")
+        }
         return InteractionResult.PASS
     }
 
