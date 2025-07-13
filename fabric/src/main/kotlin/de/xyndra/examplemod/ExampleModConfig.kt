@@ -11,7 +11,7 @@ import io.wispforest.owo.config.annotation.Config
 import io.wispforest.owo.config.annotation.Modmenu
 import java.io.Writer
 
-@Config(name = "ExampleModConfig", wrapperName = "")
+@Config(name = ProjectProps.MOD_ID, wrapperName = "")
 @Modmenu(modId = ProjectProps.MOD_ID)
 class ExampleModConfig {
     @Serializer

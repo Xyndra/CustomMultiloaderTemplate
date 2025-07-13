@@ -1,10 +1,14 @@
 {
-    "itemGroup.examplemod.example_tab": "Example Mod Tab",
-    "block.examplemod.example_block": "Example Block",
-    "item.examplemod.example_item": "Example Item",
+    "itemGroup.${mod_id}.example_tab": "Example Mod Tab",
+    "block.${mod_id}.example_block": "Example Block",
+    "item.${mod_id}.example_item": "Example Item",
 
-    "examplemod.configuration.title": "Example Mod Configs",
-    "examplemod.configuration.should_print": "Should Print",
-    "examplemod.configuration.test_int_1": "Test Integer 1",
-    "examplemod.configuration.test_int_2": "Test Integer 2"
+    "${mod_id}.configuration.title": "Example Mod Configs",
+    "text.config.${mod_id}.title": "Example Mod Configs",
+    "${mod_id}.configuration.should_print": "Should Print",
+    "text.config.${mod_id}.option.should_print": "Should Print",
+    "${mod_id}.configuration.test_int_1": "Test Integer 1",
+    "text.config.${mod_id}.option.test_int_1": "Test Integer 1",
+    "${mod_id}.configuration.test_int_2": "Test Integer 2",
+    "text.config.${mod_id}.option.test_int_2": "Test Integer 2"
 }
