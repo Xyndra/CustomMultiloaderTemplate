@@ -33,49 +33,6 @@ data class BlockInfo(
     val shouldCreateItem: Boolean = true,
 )
 
-sealed interface ConfigOption<T> {
-    val defaultValue: T
-    var value: T
-
-    fun predicate(new: Any): Boolean
-
-    fun reset() {
-        value = defaultValue
-    }
-}
-
-class BooleanConfigOption(
-    override val defaultValue: Boolean = false
-) : ConfigOption<Boolean> {
-    override var value: Boolean = defaultValue
-    override fun predicate(new: Any): Boolean {
-        return new is Boolean
-    }
-    override fun toString(): String {
-        return value.toString()
-    }
-}
-
-open class IntConfigOption(
-    final override val defaultValue: Int = 0,
-    private val minValue: Int = Int.MIN_VALUE,
-    private val maxValue: Int = Int.MAX_VALUE
-) : ConfigOption<Int> {
-    init {
-        if (defaultValue < minValue || defaultValue > maxValue) {
-            throw IllegalArgumentException("Default value must be between $minValue and $maxValue")
-        }
-    }
-
-    override var value: Int = defaultValue
-    override fun predicate(new: Any): Boolean {
-        return new is Int && new in minValue..maxValue
-    }
-    override fun toString(): String {
-        return value.toString()
-    }
-}
-
 object Globals {
     val logger: Logger = LoggerFactory.getLogger(ProjectProps["modName"])
 

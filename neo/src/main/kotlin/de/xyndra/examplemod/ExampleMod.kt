@@ -3,7 +3,6 @@ package de.xyndra.examplemod
 import de.xyndra.examplemod.Globals.logger
 import de.xyndra.examplemod.utils.ProjectProps
 import net.minecraft.client.Minecraft
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
@@ -18,7 +17,6 @@ import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.ModContainer
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
-import net.neoforged.fml.config.ModConfig
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.neoforge.common.NeoForge
@@ -33,6 +31,7 @@ import net.neoforged.neoforge.registries.DeferredRegister
 @Mod(ProjectProps.MOD_ID)
 class ExampleMod(modEventBus: IEventBus, modContainer: ModContainer) {
     init {
+        loadConfigOptions()
         BLOCKS.register(modEventBus)
         ITEMS.register(modEventBus)
         CREATIVE_MODE_TABS.register(modEventBus)
@@ -40,7 +39,6 @@ class ExampleMod(modEventBus: IEventBus, modContainer: ModContainer) {
         NeoForge.EVENT_BUS.register(NeoEvents)
         modEventBus.register(this)
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC)
     }
 
     object NeoEvents {
@@ -55,12 +53,6 @@ class ExampleMod(modEventBus: IEventBus, modContainer: ModContainer) {
     private fun commonSetup(event: FMLCommonSetupEvent) {
         // Some common setup code
         info("HELLO FROM COMMON SETUP")
-
-        if (Config.LOG_DIRT_BLOCK.asBoolean) {
-            info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT))
-        }
-
-        info("{}", Config.MAGIC_NUMBER.asInt)
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class

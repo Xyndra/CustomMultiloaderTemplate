@@ -6,6 +6,7 @@ plugins {
     id("maven-publish")
     id("net.neoforged.gradle.userdev") version "7.0.189"
     kotlin("jvm")
+    kotlin("plugin.serialization")
 }
 
 val modId: String by project

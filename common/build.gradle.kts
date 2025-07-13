@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     id("maven-publish")
     kotlin("jvm")
+    kotlin("plugin.serialization")
     id("net.neoforged.gradle.vanilla") version "7.0.189"
 }
 
@@ -54,4 +55,5 @@ dependencies {
     annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5")
     compileOnly(kotlin("reflect"))
     compileOnly("org.ow2.asm:asm:9.6")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 }

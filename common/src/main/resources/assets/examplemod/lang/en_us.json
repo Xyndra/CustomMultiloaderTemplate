@@ -1,13 +1,10 @@
 {
-  "itemGroup.examplemod.example_tab": "Example Mod Tab",
-  "block.examplemod.example_block": "Example Block",
-  "item.examplemod.example_item": "Example Item",
+    "itemGroup.examplemod.example_tab": "Example Mod Tab",
+    "block.examplemod.example_block": "Example Block",
+    "item.examplemod.example_item": "Example Item",
 
-  "examplemod.configuration.title": "Example Mod Configs",
-  "examplemod.configuration.section.examplemod.common.toml": "Example Mod Configs",
-  "examplemod.configuration.section.examplemod.common.toml.title": "Example Mod Configs",
-  "examplemod.configuration.items": "Item List",
-  "examplemod.configuration.logDirtBlock": "Log Dirt Block",
-  "examplemod.configuration.magicNumberIntroduction": "Magic Number Text",
-  "examplemod.configuration.magicNumber": "Magic Number"
+    "examplemod.configuration.title": "Example Mod Configs",
+    "examplemod.configuration.should_print": "Should Print",
+    "examplemod.configuration.test_int_1": "Test Integer 1",
+    "examplemod.configuration.test_int_2": "Test Integer 2"
 }

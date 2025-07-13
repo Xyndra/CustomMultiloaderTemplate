@@ -23,23 +23,11 @@ class ExampleModConfig {
 
             @Deprecated("Deprecated in Java")
             override fun toJson(comments: Boolean, newlines: Boolean, depth: Int): String {
-                return configOptions.entries.joinToString(
-                    prefix = "{\n",
-                    postfix = "\n}",
-                    separator = ",\n"
-                ) { (name, option) ->
-                    "\"$name\": ${option.value}"
-                }
+                return configOptions.serializeJson()
             }
 
             override fun toJson(writer: Writer, grammar: JsonGrammar, depth: Int) {
-                writer.write(configOptions.entries.joinToString(
-                    prefix = "{\n",
-                    postfix = "\n}",
-                    separator = ",\n"
-                ) { (name, option) ->
-                    "\t\"$name\": ${option.value}"
-                })
+                writer.write(configOptions.serializeJson())
             }
         }
     }
