@@ -165,6 +165,14 @@ class MinecraftTemplateHelper {
         validate: (input) =>
           input.trim().length > 0 ? true : "License cannot be empty",
       },
+      {
+        type: "input",
+        name: "outputDirectory",
+        message: "Output directory:",
+        default: (answers) => `${answers.modId}_${answers.branch}`,
+        validate: (input) =>
+          input.trim().length > 0 ? true : "Output directory cannot be empty",
+      },
     ];
 
     const answers = await inquirer.prompt(questions);
@@ -464,7 +472,6 @@ class MinecraftTemplateHelper {
             if (
               item === ".git" ||
               item === "node_modules" ||
-              item === ".idea" ||
               item === "target" ||
               item === "build"
             ) {
@@ -745,6 +752,7 @@ class MinecraftTemplateHelper {
       console.log(chalk.gray(`Main Class: ${config.mainClassName}`));
       console.log(chalk.gray(`Authors: ${config.modAuthors}`));
       console.log(chalk.gray(`License: ${config.modLicense}`));
+      console.log(chalk.gray(`Output Directory: ${config.outputDirectory}`));
       console.log(
         chalk.gray(
           `Description: ${config.modDescription.replace(/\\n/g, "\n             ")}`,
@@ -767,7 +775,7 @@ class MinecraftTemplateHelper {
       }
 
       // Generate template
-      const outputDir = path.join(process.cwd(), config.modId);
+      const outputDir = path.join(process.cwd(), config.outputDirectory);
       await this.cloneAndProcess(config, outputDir);
     } catch (error) {
       console.error(chalk.red("❌ An error occurred:"), error.message);
