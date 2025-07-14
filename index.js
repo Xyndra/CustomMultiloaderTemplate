@@ -572,7 +572,7 @@ class MinecraftTemplateHelper {
       execSync("git add .", { cwd: outputDir, stdio: "inherit" });
 
       // Create initial commit with template message
-      execSync('git commit -m "apply template by xyndra"', {
+      execSync('git commit -m "apply template by xyndra [skip ci]"', {
         cwd: outputDir,
         stdio: "inherit",
       });
