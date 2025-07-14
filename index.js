@@ -34,7 +34,8 @@ class MinecraftTemplateHelper {
       const branches = output
         .split("\n")
         .filter((line) => line.trim())
-        .map((line) => line.split("\t")[1].replace("refs/heads/", ""));
+        .map((line) => line.split("\t")[1].replace("refs/heads/", ""))
+        .filter((branch) => branch.startsWith("1."));
       return branches;
     } catch (error) {
       console.error(chalk.red("Error fetching branches from repository"));
@@ -547,6 +548,49 @@ class MinecraftTemplateHelper {
     }
   }
 
+  // Setup git repository with squashed commit
+  async setupGitRepository(outputDir, config) {
+    try {
+      console.log(chalk.blue("🔧 Setting up git repository..."));
+
+      // Remove existing .git directory if it exists
+      const gitDir = path.join(outputDir, ".git");
+      if (await fs.pathExists(gitDir)) {
+        await fs.remove(gitDir);
+      }
+
+      // Initialize new git repository
+      execSync("git init", { cwd: outputDir, stdio: "inherit" });
+
+      // Create and switch to the same branch as the original template
+      execSync(`git checkout -b ${config.branch}`, {
+        cwd: outputDir,
+        stdio: "inherit",
+      });
+
+      // Add all files
+      execSync("git add .", { cwd: outputDir, stdio: "inherit" });
+
+      // Create initial commit with template message
+      execSync('git commit -m "apply template by xyndra"', {
+        cwd: outputDir,
+        stdio: "inherit",
+      });
+
+      console.log(chalk.green("✅ Git repository setup complete!"));
+      console.log(chalk.gray("    Repository detached from remote"));
+      console.log(
+        chalk.gray("    All changes committed as: 'apply template by xyndra'"),
+      );
+    } catch (error) {
+      console.error(
+        chalk.red("❌ Error setting up git repository:"),
+        error.message,
+      );
+      // Don't fail the entire process if git setup fails
+    }
+  }
+
   // Clone repository and process template
   async cloneAndProcess(config, outputDir) {
     const tempDir = path.join(os.tmpdir(), `mc-template-${Date.now()}`);
@@ -570,6 +614,9 @@ class MinecraftTemplateHelper {
       console.log(chalk.blue("📁 Moving files to output directory..."));
       await fs.ensureDir(outputDir);
       await fs.copy(tempDir, outputDir);
+
+      // Setup git repository after files are moved
+      await this.setupGitRepository(outputDir, config);
 
       console.log(chalk.blue("🧹 Cleaning up..."));
 
