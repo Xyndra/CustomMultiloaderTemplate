@@ -257,6 +257,11 @@ class MinecraftTemplateHelper {
         content = content.replace(/example-mod/g, config.modId);
         console.log(chalk.gray(`     → Replaced example-mod`));
       }
+      if (content.includes("Example_Mod")) {
+        const modNameWithUnderscores = config.modName.replace(/\s+/g, "_");
+        content = content.replace(/Example_Mod/g, modNameWithUnderscores);
+        console.log(chalk.gray(`     → Replaced Example_Mod`));
+      }
       if (content.includes("Example Mod")) {
         content = content.replace(/Example Mod/g, config.modName);
         console.log(chalk.gray(`     → Replaced Example Mod`));
