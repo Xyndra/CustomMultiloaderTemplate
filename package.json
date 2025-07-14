@@ -1,0 +1,19 @@
+{
+  "name": "mc-template-helper",
+  "version": "1.0.0",
+  "description": "A CLI tool for my custom Minecraft mod template",
+  "bin": "index.js",
+  "type": "module",
+  "keywords": [
+    "cli",
+    "minecraft",
+    "template"
+  ],
+  "author": "Xyndra",
+  "license": "ARR",
+  "dependencies": {
+    "inquirer": "^12.7.0",
+    "chalk": "^4.1.2",
+    "fs-extra": "^11.1.0"
+  }
+}
