@@ -1,6 +1,5 @@
 package de.xyndra.examplemod
 
-import de.xyndra.examplemod.Globals.logger
 import de.xyndra.examplemod.utils.ProjectProps
 import net.minecraft.client.Minecraft
 import net.minecraft.core.registries.Registries
@@ -9,6 +8,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
+import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.neoforged.api.distmarker.Dist
@@ -70,20 +70,47 @@ class ExampleMod(modEventBus: IEventBus, modContainer: ModContainer) {
 
     @SubscribeEvent
     fun addCreative(event: BuildCreativeModeTabContentsEvent) {
-        for ((name, info) in Globals.itemInfos) {
+        for ((name, info) in sortItemsByDependencies()) {
             val item = registeredItems[name]?.get() ?: continue
-            if (info.tab != null) {
-                if (event.tabKey == info.tab) {
-                    event.accept(item)
+            for ((tabRef, itemRef) in info.tabs) {
+                val itemKey: ItemLike? = when (itemRef) {
+                    is ItemReference.ItemKey -> itemRef.key
+                    is ItemReference.ItemName -> registeredItems[itemRef.name]?.get()
+                    null -> null
                 }
-            } else if (info.tabName != null) {
-                val resourceLocation = ResourceLocation.fromNamespaceAndPath(ProjectProps["modId"], info.tabName!!)
-                val resourceKey = ResourceKey.create(Registries.CREATIVE_MODE_TAB, resourceLocation)
-                if (event.tabKey == resourceKey) {
-                    event.accept(item)
+                when (tabRef) {
+                    is TabReference.TabKey -> {
+                        if (event.tabKey == tabRef.key) {
+                            if (itemKey != null) {
+                                event.insertAfter(
+                                    itemKey.asItem().defaultInstance,
+                                    item.defaultInstance,
+                                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+                                )
+                            } else {
+                                event.accept(item)
+                            }
+                        }
+                    }
+
+                    is TabReference.TabName -> {
+                        val resourceLocation =
+                            ResourceLocation.fromNamespaceAndPath(ProjectProps["modId"], tabRef.name)
+                        val resourceKey =
+                            ResourceKey.create(Registries.CREATIVE_MODE_TAB, resourceLocation)
+                        if (event.tabKey == resourceKey) {
+                            if (itemKey != null) {
+                                event.insertAfter(
+                                    itemKey.asItem().defaultInstance,
+                                    item.defaultInstance,
+                                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+                                )
+                            } else {
+                                event.accept(item)
+                            }
+                        }
+                    }
                 }
-            } else {
-                logger.warn("ItemInfo for item {} is missing tab or tabName", name)
             }
         }
     }
@@ -102,6 +129,11 @@ class ExampleMod(modEventBus: IEventBus, modContainer: ModContainer) {
         init {
             Globals.loadAssets()
 
+            // Register items
+            for ((name, constructor) in Globals.items) {
+                registeredItems[name] = ITEMS.registerItem(name, constructor)
+            }
+
             // Register blocks
             for ((name, constructor) in Globals.blocks) {
                 registeredBlocks[name] = BLOCKS.registerBlock(name, constructor)
@@ -111,22 +143,16 @@ class ExampleMod(modEventBus: IEventBus, modContainer: ModContainer) {
                 registeredItems[name] = ITEMS.registerSimpleBlockItem(registeredBlocks[name]!!)
             }
 
-            // Register items
-            for ((name, constructor) in Globals.items) {
-                registeredItems[name] = ITEMS.registerItem(name, constructor)
-            }
-
             // Register creative tabs
             for ((tabName, tabInfo) in Globals.creativeTabs) {
                 registeredTabs[tabName] = CREATIVE_MODE_TABS.register(tabName) { _ ->
                     CreativeModeTab.builder()
                         .title(Component.translatable("itemGroup.${ProjectProps.MOD_ID}.$tabName"))
                         .icon {
-                            if (tabInfo.iconItem == null) {
-                                Blocks.DIRT.asItem().defaultInstance
-                            } else {
-                                registeredItems[tabInfo.iconItem]?.get()?.defaultInstance
-                                    ?: Blocks.DIRT.asItem().defaultInstance
+                            when (tabInfo.iconItem) {
+                                is ItemReference.ItemKey -> (tabInfo.iconItem as ItemReference.ItemKey).key.defaultInstance
+                                is ItemReference.ItemName -> registeredItems[(tabInfo.iconItem as ItemReference.ItemName).name]?.get()?.defaultInstance
+                                else -> Blocks.DIRT.asItem().defaultInstance
                             }
                         }
                         .build()

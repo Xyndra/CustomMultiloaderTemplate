@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
+import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockBehaviour
@@ -85,10 +86,10 @@ object ExampleMod : ModInitializer {
                     FabricItemGroup.builder()
                             .title(Component.translatable("itemGroup.${ProjectProps["modId"]}.$tabName"))
                             .icon {
-                                if (tabInfo.iconItem == null) {
-                                    Blocks.DIRT.asItem().defaultInstance
-                                } else {
-                                    items[tabInfo.iconItem]?.defaultInstance ?: Blocks.DIRT.asItem().defaultInstance
+                                when (tabInfo.iconItem) {
+                                    is ItemReference.ItemKey -> (tabInfo.iconItem as ItemReference.ItemKey).key.defaultInstance
+                                    is ItemReference.ItemName -> items[(tabInfo.iconItem as ItemReference.ItemName).name]?.defaultInstance
+                                    else -> Blocks.DIRT.asItem().defaultInstance
                                 }
                             }
                             .build()
@@ -101,14 +102,35 @@ object ExampleMod : ModInitializer {
 
         for ((name, info) in Globals.itemInfos) {
             val item = items[name] ?: continue
-            if (info.tab != null) {
-                ItemGroupEvents.modifyEntriesEvent(info.tab).register { entries -> entries.accept(item.defaultInstance) }
-            } else if (info.tabName != null) {
-                val resourceLocation = ResourceLocation.fromNamespaceAndPath(ProjectProps["modId"], info.tabName!!)
-                val resourceKey = ResourceKey.create(Registries.CREATIVE_MODE_TAB, resourceLocation)
-                ItemGroupEvents.modifyEntriesEvent(resourceKey).register { entries -> entries.accept(item.defaultInstance) }
-            } else {
-                logger.warn("Item $name has no tab set in ItemInfo")
+            for ((tabRef, itemRef) in info.tabs) {
+                val itemKey: ItemLike? = when (itemRef) {
+                    is ItemReference.ItemKey -> itemRef.key
+                    is ItemReference.ItemName -> items[itemRef.name]
+                    null -> null
+                }
+
+                when (tabRef) {
+                    is TabReference.TabKey -> ItemGroupEvents.modifyEntriesEvent(tabRef.key).register { entries ->
+                        if (itemKey != null) {
+                            entries.addAfter(itemKey, item)
+                        } else {
+                            entries.accept(item)
+                        }
+                    }
+
+                    is TabReference.TabName -> ItemGroupEvents.modifyEntriesEvent(
+                        ResourceKey.create(
+                            Registries.CREATIVE_MODE_TAB,
+                            ResourceLocation.fromNamespaceAndPath(ProjectProps["modId"], tabRef.name)
+                        )
+                    ).register { entries ->
+                        if (itemKey != null) {
+                            entries.addAfter(itemKey, item)
+                        } else {
+                            entries.accept(item)
+                        }
+                    }
+                }
             }
         }
 

@@ -2,6 +2,7 @@ package de.xyndra.examplemod.items
 
 import de.xyndra.examplemod.Globals
 import de.xyndra.examplemod.ItemInfo
+import de.xyndra.examplemod.TabReference
 import de.xyndra.examplemod.options.TestOptions
 import de.xyndra.examplemod.tabs.ExampleTab
 import de.xyndra.examplemod.utils.LoadKt
@@ -26,7 +27,7 @@ class ExampleItem(props: Properties) : Item(
         fun load() {
             println("Loading ExampleItem...")
             Globals.items[NAME] = { props: Properties -> ExampleItem(props) }
-            Globals.itemInfos[NAME] = ItemInfo(tabName = ExampleTab.NAME)
+            Globals.itemInfos[NAME] = ItemInfo(tabs = listOf(TabReference.TabName(ExampleTab.NAME) to null))
         }
     }
 }

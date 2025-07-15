@@ -1,15 +1,15 @@
 {
-	"required": true,
-	"package": "de.xyndra.examplemod.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-      "ExampleMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	},
-	"overwrites": {
-		"requireAnnotations": true
-	},
-	"refmap": "${mod_id}.refmap.json"
+  "required": true,
+  "package": "de.xyndra.examplemod.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CreativeModeTabsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "refmap": "${mod_id}.refmap.json"
 }

@@ -11,23 +11,23 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 data class CreativeTabInfo(
-        val name: String,
-        val iconItem: String? = null,
-        val items: MutableList<String> = mutableListOf()
+    val name: String,
+    val iconItem: ItemReference? = null,
 )
 
-data class ItemInfo(
-    val tab: ResourceKey<CreativeModeTab>? = null,
-    val tabName: String? = null,
-) {
-    init {
-        if (tab == null && tabName == null) {
-            throw IllegalArgumentException("Either 'tab' or 'tabName' must be provided for ItemInfo")
-        } else if (tab != null && tabName != null) {
-            throw IllegalArgumentException("Only one of 'tab' or 'tabName' should be provided for ItemInfo")
-        }
-    }
+sealed class TabReference {
+    data class TabKey(val key: ResourceKey<CreativeModeTab>) : TabReference()
+    data class TabName(val name: String) : TabReference()
 }
+
+sealed class ItemReference {
+    data class ItemKey(val key: Item) : ItemReference()
+    data class ItemName(val name: String) : ItemReference()
+}
+
+data class ItemInfo(
+    val tabs: List<Pair<TabReference, ItemReference?>>,
+)
 
 data class BlockInfo(
     val shouldCreateItem: Boolean = true,
